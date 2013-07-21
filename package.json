@@ -1,0 +1,26 @@
+{
+  "name": "ast-visitor",
+  "version": "0.1.0",
+  "description": "Visit nodes in the abstract syntax tree",
+  "main": "visitor.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/curvedmark/ast-visitor.git"
+  },
+  "keywords": [
+    "ast",
+    "visitor",
+    "compiler"
+  ],
+  "author": "Glen Huang <curvedmark@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/curvedmark/ast-visitor/issues"
+  }
+}
