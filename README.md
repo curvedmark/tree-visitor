@@ -111,3 +111,7 @@ visitor.visit(nodes);
 `visitor` has a method `visit()`. You can pass a single node or an array of nodes, in the latter case, each node in the array will be visited sequentially.
 
 `this` keyword in each action refers to the `visitor` object in the previous example. Note however, actions are not added to the `visitor` object, so `visitor.number` does not exist (nor does `this.number` in each action for that matter).
+
+When visiting a single node, `visit(node)` returns the returned value of the corresponding action.
+
+When visiting an array of nodes, the original array is returned.

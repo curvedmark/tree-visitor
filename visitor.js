@@ -7,17 +7,18 @@ function Visitor(actions) {
 }
 
 Visitor.prototype.visit = function(node) {
-	if (Array.isArray(node)) this._visitNodes(node);
-	else this._visitNode(node);
+	if (Array.isArray(node)) return this._visitNodes(node);
+	else return this._visitNode(node);
 };
 
 Visitor.prototype._visitNodes = function (nodes) {
 	nodes.forEach(this._visitNode.bind(this));
+	return nodes;
 };
 
 Visitor.prototype._visitNode = function(node) {
-	if (node !== Object(node)) return;
-	if (!node.type) return;
+	if (node !== Object(node)) return node;
+	if (!node.type) return node;
 	var action = this._actions[node.type] || this._actions.node;
-	if (action) action.call(this, node);
+	if (action) return action.call(this, node);
 };
