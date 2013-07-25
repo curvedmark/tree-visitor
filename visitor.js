@@ -8,7 +8,7 @@ function Visitor(actions) {
 
 Visitor.prototype.visit = function(node) {
 	if (Array.isArray(node)) return this._visitNodes(node);
-	else return this._visitNode(node);
+	return this._visitNode(node);
 };
 
 Visitor.prototype._visitNodes = function (nodes) {
@@ -16,7 +16,7 @@ Visitor.prototype._visitNodes = function (nodes) {
 	return nodes;
 };
 
-Visitor.prototype._visitNode = function(node) {
+Visitor.prototype._visitNode = function (node) {
 	if (node !== Object(node)) return node;
 	if (!node.type) return node;
 	var action = this._actions[node.type] || this._actions.node;
