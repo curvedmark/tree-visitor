@@ -1,4 +1,4 @@
-# AST Visitor
+# Tree Visitor
 
 Visit nodes in the abstract syntax tree.
 
@@ -7,7 +7,7 @@ Visit nodes in the abstract syntax tree.
 Visit a single node:
 
 ```javascript
-var Visitor = require('ast-visitor');
+var Visitor = require('tree-visitor');
 
 var node = { type: 'number', value: 1 };
 var visitor = new Visitor({
@@ -21,7 +21,7 @@ visitor.visit(node); // 1
 Visit an array of nodes:
 
 ```javascript
-var Visitor = require('ast-visitor');
+var Visitor = require('tree-visitor');
 
 var nodes = [
 	{ type: 'number', value: 1 },
@@ -41,9 +41,9 @@ visitor.visit(nodes); // 1 "abc"
 Visit nested nodes:
 
 ```javascript
-var Visitor = require('ast-visitor');
+var Visitor = require('tree-visitor');
 
-var ast = {
+var tree = {
 		type: 'binaryExpression',
 		operator: '+',
 		left: { type: 'number', value: 1 },
@@ -62,13 +62,13 @@ var visitor = new Visitor({
 	    console.log(string.quote + string.value + string.quote);
 	}
 });
-visitor.visit(ast); // 1 + "abc"
+visitor.visit(tree); // 1 + "abc"
 ```
 
 One function to rule them all:
 
 ```javascript
-var Visitor = require('ast-visitor');
+var Visitor = require('tree-visitor');
 
 var nodes = [
 	{ type: 'number', value: 1 },
