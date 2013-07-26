@@ -1,7 +1,7 @@
 {
   "name": "tree-visitor",
   "version": "0.3.0",
-  "description": "Visit nodes in the abstract syntax tree",
+  "description": "Visit nodes in the tree",
   "main": "Visitor.js",
   "directories": {
     "test": "test"

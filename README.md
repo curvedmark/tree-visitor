@@ -1,6 +1,6 @@
 # Tree Visitor
 
-Visit nodes in the abstract syntax tree.
+Visit nodes in the tree.
 
 ## Example
 
