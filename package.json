@@ -2,7 +2,7 @@
   "name": "ast-visitor",
   "version": "0.2.0",
   "description": "Visit nodes in the abstract syntax tree",
-  "main": "visitor.js",
+  "main": "Visitor.js",
   "directories": {
     "test": "test"
   },

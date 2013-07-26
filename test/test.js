@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Visitor = require('../visitor');
+var Visitor = require('../Visitor');
 
 describe('Visitor', function () {
 	it('should visit a single node', function () {
