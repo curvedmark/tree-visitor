@@ -7,7 +7,7 @@ describe('Visitor', function () {
 
 		var node = { type: 'number', value: 1 };
 		new Visitor({
-			number: function (number) {
+			number: function (visitor, number) {
 				++count;
 				assert.equal(number.value, 1);
 			}
@@ -24,11 +24,11 @@ describe('Visitor', function () {
 			{ type: 'string', value: 'abc'}
 		];
 		new Visitor({
-			number: function (number) {
+			number: function (visitor, number) {
 				++count;
 				assert.equal(number.value, 1);
 			},
-			string: function (string) {
+			string: function (visitor, string) {
 				++count;
 				assert.equal(string.value, 'abc');
 			}
@@ -45,11 +45,11 @@ describe('Visitor', function () {
 			value: { type: 'number', value: 1 }
 		};
 		new Visitor({
-			expression: function (expression) {
+			expression: function (visitor, expression) {
 				++count;
-				this.visit(expression.value);
+				visitor.visit(expression.value);
 			},
-			number: function (number) {
+			number: function (visitor, number) {
 				++count;
 				assert.equal(number.value, 1);
 			}
@@ -63,7 +63,7 @@ describe('Visitor', function () {
 
 		var node = { type: 'number', value: 1 };
 		new Visitor({
-			node: function (number) {
+			node: function (visitor, number) {
 				++count;
 				assert.equal(number.value, 1);
 			}
@@ -97,19 +97,4 @@ describe('Visitor', function () {
 
 		if (count) throw new Error('node is not ignored');
 	});
-
-	it('should set action context', function () {
-		var count = 0;
-
-		var node = { type: 'number', value: 1 };
-		var visitor = new Visitor({
-			number: function (number) {
-				++count;
-				assert.equal(this, visitor);
-			}
-		});
-		visitor.visit(node);
-
-		if (!count) throw new Error('node is never visited');
-	})
 });

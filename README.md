@@ -11,7 +11,7 @@ var Visitor = require('tree-visitor');
 
 var node = { type: 'number', value: 1 };
 var visitor = new Visitor({
-	number: function (number) {
+	number: function (visitor, number) {
 	    console.log(number.value);
 	}
 });
@@ -28,10 +28,10 @@ var nodes = [
 	{ type: 'string', value: 'abc', quote: '"' }
 ];
 var visitor = new Visitor({
-	number: function (number) {
+	number: function (visitor, number) {
 	    console.log(number.value);
 	},
-	string: function (string) {
+	string: function (visitor, string) {
 	    console.log(string.quote + string.value + string.quote);
 	}
 });
@@ -50,15 +50,15 @@ var tree = {
 		right: { type: 'string', value: 'abc' }
 };
 var visitor = new Visitor({
-	binaryExpression: function (binaryExpression) {
-		this.visit(binaryExpression.left);
+	binaryExpression: function (visitor, binaryExpression) {
+		visitor.visit(binaryExpression.left);
 		console.log(binaryExpression.operator);
-		this.visit(binaryExpression.right);
+		visitor.visit(binaryExpression.right);
 	},
-	number: function (number) {
+	number: function (visitor, number) {
 	    console.log(number.value);
 	},
-	string: function (string) {
+	string: function (visitor, string) {
 	    console.log(string.quote + string.value + string.quote);
 	}
 });
@@ -75,7 +75,7 @@ var nodes = [
 	{ type: 'string', value: 'abc', quote: '"' }
 ];
 var visitor = new Visitor({
-	node: function (node) {
+	node: function (visitor, node) {
 		console.log(node.value);
 	}
 });
@@ -88,7 +88,7 @@ visitor.visit(nodes); // 1 abc
 var visitor = new Visitor(actions);
 ```
 
-`actions` is an object containing functions (each one is call an "action"). If the key and the value of the node's `type` property are equal, that node will be passed to the action. If no such key exists for an node, an action of key `node` will be called, if there is one. Otherwise, the node is silently ignored. Nodes don't have a `type` property are also ignored.
+`actions` is an object containing functions (each one is call an "action"). If the key and the value of the node's `type` property are equal, the created visitor object and that node will be passed to the action. If no such key exists for an node, an action of key `node` will be called, if there is one. Otherwise, the node is silently ignored. Nodes don't have a `type` property are also ignored.
 
 ```javascript
 var nodes = [
@@ -97,10 +97,10 @@ var nodes = [
 	{ type: 'boolean', value: true }
 ];
 var visitor = new Visitor({
-	number: function (number) {
+	number: function (visitor, number) {
 	    // number nodes are passed here
 	},
-	node: function (string) {
+	node: function (visitor, string) {
 	    // string and boolean nodes are passed here
 	    // number nodes are NOT passed here
 	}
@@ -109,8 +109,6 @@ visitor.visit(nodes);
 ```
 
 `visitor` has a method `visit()`. You can pass a single node or an array of nodes, in the latter case, each node in the array will be visited sequentially.
-
-`this` keyword in each action refers to the `visitor` object in the previous example. Note however, actions are not added to the `visitor` object, so `visitor.number` does not exist (nor does `this.number` in each action for that matter).
 
 When visiting a single node, `visit(node)` returns the returned value of the corresponding action.
 
