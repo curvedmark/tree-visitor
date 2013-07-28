@@ -34,7 +34,7 @@ describe('Visitor', function () {
 			}
 		}).visit(nodes);
 
-		if (count !== nodes.length) throw new Error('some node is never visited');
+		if (count !== 2) throw new Error('some node is never visited');
 	});
 
 	it('should visit nested node', function () {

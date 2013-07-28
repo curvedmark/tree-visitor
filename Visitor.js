@@ -17,8 +17,7 @@ Visitor.prototype._visitNodes = function (nodes) {
 };
 
 Visitor.prototype._visitNode = function (node) {
-	if (node !== Object(node)) return node;
-	if (!node.type) return node;
+	if (node !== Object(node) || !node.type) return node;
 	var action = this._actions[node.type] || this._actions.node;
 	if (action) return action.call(this._actions, this, node);
 };

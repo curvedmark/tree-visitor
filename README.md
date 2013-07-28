@@ -86,6 +86,7 @@ visitor.visit(nodes); // 1 abc
 
 ```javascript
 var visitor = new Visitor(actions);
+visitor.visit(node);
 ```
 
 `actions` is an object containing functions (each one is call an "action"). If the key and the value of the node's `type` property are equal, the created visitor object and that node will be passed to the action. If no such key exists for an node, an action of key `node` will be called, if there is one. Otherwise, the node is silently ignored. Nodes don't have a `type` property are also ignored.
@@ -108,8 +109,8 @@ var visitor = new Visitor({
 visitor.visit(nodes);
 ```
 
-`visitor` has a method `visit()`. You can pass a single node or an array of nodes, in the latter case, each node in the array will be visited sequentially.
+`node` passed to `visit()` can be either a single node or an array of nodes. In the latter case, each node in the array will be visited sequentially.
 
-When visiting a single node, `visit(node)` returns the returned value of the corresponding action.
+When visiting a single node, the returning value of the corresponding action is returned.
 
 When visiting an array of nodes, the original array is returned.
