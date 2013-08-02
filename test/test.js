@@ -7,7 +7,7 @@ describe('Visitor', function () {
 
 		var node = { type: 'number', value: 1 };
 		new Visitor({
-			number: function (visitor, number) {
+			number: function (number) {
 				++count;
 				assert.equal(number.value, 1);
 			}
@@ -24,11 +24,11 @@ describe('Visitor', function () {
 			{ type: 'string', value: 'abc'}
 		];
 		new Visitor({
-			number: function (visitor, number) {
+			number: function (number) {
 				++count;
 				assert.equal(number.value, 1);
 			},
-			string: function (visitor, string) {
+			string: function (string) {
 				++count;
 				assert.equal(string.value, 'abc');
 			}
@@ -45,11 +45,11 @@ describe('Visitor', function () {
 			value: { type: 'number', value: 1 }
 		};
 		new Visitor({
-			expression: function (visitor, expression) {
+			expression: function (expression) {
 				++count;
-				visitor.visit(expression.value);
+				this.visit(expression.value);
 			},
-			number: function (visitor, number) {
+			number: function (number) {
 				++count;
 				assert.equal(number.value, 1);
 			}
@@ -63,7 +63,7 @@ describe('Visitor', function () {
 
 		var node = { type: 'number', value: 1 };
 		new Visitor({
-			node: function (visitor, number) {
+			node: function (number) {
 				++count;
 				assert.equal(number.value, 1);
 			}
