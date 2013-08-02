@@ -11,7 +11,7 @@ var Visitor = require('tree-visitor');
 
 var node = { type: 'number', value: 1 };
 var visitor = new Visitor({
-	number: function (visitor, number) {
+	number: function (number) {
 	    console.log(number.value);
 	}
 });
@@ -28,10 +28,10 @@ var nodes = [
 	{ type: 'string', value: 'abc', quote: '"' }
 ];
 var visitor = new Visitor({
-	number: function (visitor, number) {
+	number: function (number) {
 	    console.log(number.value);
 	},
-	string: function (visitor, string) {
+	string: function (string) {
 	    console.log(string.quote + string.value + string.quote);
 	}
 });
@@ -50,15 +50,15 @@ var tree = {
 		right: { type: 'string', value: 'abc' }
 };
 var visitor = new Visitor({
-	binaryExpression: function (visitor, binaryExpression) {
-		visitor.visit(binaryExpression.left);
+	binaryExpression: function (binaryExpression) {
+		this.visit(binaryExpression.left);
 		console.log(binaryExpression.operator);
-		visitor.visit(binaryExpression.right);
+		this.visit(binaryExpression.right);
 	},
-	number: function (visitor, number) {
+	number: function (number) {
 	    console.log(number.value);
 	},
-	string: function (visitor, string) {
+	string: function (string) {
 	    console.log(string.quote + string.value + string.quote);
 	}
 });
@@ -75,7 +75,7 @@ var nodes = [
 	{ type: 'string', value: 'abc', quote: '"' }
 ];
 var visitor = new Visitor({
-	node: function (visitor, node) {
+	node: function (node) {
 		console.log(node.value);
 	}
 });
@@ -98,10 +98,10 @@ var nodes = [
 	{ type: 'boolean', value: true }
 ];
 var visitor = new Visitor({
-	number: function (visitor, number) {
+	number: function (number) {
 	    // number nodes are passed here
 	},
-	node: function (visitor, string) {
+	node: function (string) {
 	    // string and boolean nodes are passed here
 	    // number nodes are NOT passed here
 	}
@@ -110,6 +110,8 @@ visitor.visit(nodes);
 ```
 
 `node` passed to `visit()` can be either a single node or an array of nodes. In the latter case, each node in the array will be visited sequentially.
+
+`this` keyword in each action refers to the `visitor` object in the previous example. Note however, actions are not added to the `visitor` object, so `visitor.number` does not exist (nor does `this.number` for that matter).
 
 When visiting a single node, the returning value of the corresponding action is returned.
 
