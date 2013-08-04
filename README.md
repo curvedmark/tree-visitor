@@ -8,64 +8,78 @@ Visit a single node:
 
 ```javascript
 var Visitor = require('tree-visitor');
-
 var node = { type: 'number', value: 1 };
-var visitor = new Visitor({
-	number: function (number) {
-	    console.log(number.value);
-	}
-});
-visitor.visit(node); // 1
+
+function MyVisitor() {}
+MyVisitor.prototype = new Visitor();
+
+MyVisitor.prototype.visit_number = function (number) {
+	console.log(number.value);
+};
+
+var myVisitor = new MyVisitor();
+myVisitor.visit(node); // 1
 ```
 
 Visit an array of nodes:
 
 ```javascript
 var Visitor = require('tree-visitor');
-
 var nodes = [
 	{ type: 'number', value: 1 },
 	{ type: 'string', value: 'abc', quote: '"' }
 ];
-var visitor = new Visitor({
-	number: function (number) {
-	    console.log(number.value);
-	},
-	string: function (string) {
-	    console.log(string.quote + string.value + string.quote);
-	}
-});
-visitor.visit(nodes); // 1 "abc"
+
+function MyVisitor() {}
+MyVisitor.prototype = new Visitor();
+
+MyVisitor.prototype.visit_number = function (number) {
+	console.log(number.value);
+};
+
+MyVisitor.prototype.visit_string = function (string) {
+	console.log(string.quote + string.value + string.quote);
+};
+
+var myVisitor = new MyVisitor();
+myVisitor.visit(nodes); // 1 "abc"
 ```
 
 Visit nested nodes:
 
 ```javascript
 var Visitor = require('tree-visitor');
-
-var tree = {
+var number = { type: 'number', value: 1 };
+var string = { type: 'string', value: 'abc' };
+var expression = {
 		type: 'binaryExpression',
 		operator: '+',
-		left: { type: 'number', value: 1 },
-		right: { type: 'string', value: 'abc' }
+		left: number,
+		right: string
 };
-var visitor = new Visitor({
-	binaryExpression: function (binaryExpression) {
-		this.visit(binaryExpression.left);
-		console.log(binaryExpression.operator);
-		this.visit(binaryExpression.right);
-	},
-	number: function (number) {
-	    console.log(number.value);
-	},
-	string: function (string) {
-	    console.log(string.quote + string.value + string.quote);
-	}
-});
-visitor.visit(tree); // 1 + "abc"
+
+function MyVisitor() {}
+MyVisitor.prototype = new Visitor();
+
+MyVisitor.prototype.visit_binaryExpression = function (binaryExpression) {
+	this.visit(binaryExpression.left);
+	console.log(binaryExpression.operator);
+	this.visit(binaryExpression.right);
+};
+
+MyVisitor.prototype.visit_number = function (number) {
+	console.log(number.value);
+};
+
+MyVisitor.prototype.visit_string = function (string) {
+	console.log(string.quote + string.value + string.quote);
+};
+
+var myVisitor = new MyVisitor();
+myVisitor.visit(expression); // 1 + "abc"
 ```
 
-One function to rule them all:
+One method to rule them all:
 
 ```javascript
 var Visitor = require('tree-visitor');
@@ -74,45 +88,40 @@ var nodes = [
 	{ type: 'number', value: 1 },
 	{ type: 'string', value: 'abc', quote: '"' }
 ];
-var visitor = new Visitor({
-	node: function (node) {
-		console.log(node.value);
-	}
-});
-visitor.visit(nodes); // 1 abc
+
+function MyVisitor() {}
+MyVisitor.prototype = new Visitor();
+
+MyVisitor.prototype.visit_node = function (node) {
+	console.log(node.value);
+};
+
+var myVisitor = new MyVisitor();
+myVisitor.visit(nodes); // 1 abc
 ```
 
 ## API
 
 ```javascript
-var visitor = new Visitor(actions);
-visitor.visit(node);
+var Visitor = require('tree-visitor');
+
+function MyVisitor() {}
+MyVisitor.prototype = new Visitor();
+
+MyVisitor.prototype.visit_nodeType = function (node) {};
+
+var myVisitor = new MyVisitor();
+myVisitor.visit(node);
 ```
 
-`actions` is an object containing functions (each one is call an "action"). If the key and the value of the node's `type` property are equal, the created visitor object and that node will be passed to the action. If no such key exists for an node, an action of key `node` will be called, if there is one. Otherwise, the node is silently ignored. Nodes don't have a `type` property are also ignored.
+`Visitor` should be "subclassed" by a constructor, the new constructor should have methods like `.visit_nodeType()`, and the node being visited should have a `type` property. If the value of `type` and the string after `.visit_` matches, the node will be passed to that method when calling `.visit(node)`.
 
-```javascript
-var nodes = [
-	{ type: 'number', value: 1 },
-	{ type: 'string', value: 'abc', quote: '"' }
-	{ type: 'boolean', value: true }
-];
-var visitor = new Visitor({
-	number: function (number) {
-	    // number nodes are passed here
-	},
-	node: function (string) {
-	    // string and boolean nodes are passed here
-	    // number nodes are NOT passed here
-	}
-});
-visitor.visit(nodes);
-```
+Either a single node (any js object), or an array of nodes can be visited. In the latter case, the nodes are visited sequentially.
 
-`node` passed to `visit()` can be either a single node or an array of nodes. In the latter case, each node in the array will be visited sequentially.
+`.visit_node()` is a special method, if the node being visited doesn't have a corresponding method, it's passed to `.visit_node()`. If it does, however, it will not be passed to this method.
 
-`this` keyword in each action refers to the `visitor` object in the previous example. Note however, actions are not added to the `visitor` object, so `visitor.number` does not exist (nor does `this.number` for that matter).
+Nodes that are not a plain object (e.g., string, `null`, etc) or don't have a `type` property are ignored (i.e., it's not passed to any method, not even `.visit_node()`).
 
-When visiting a single node, the returning value of the corresponding action is returned.
+When visiting a single node, the returning value of `.visit(node)` is the returning value of the corresponding method, or the node itself if it doesn't have a corresponding method.
 
-When visiting an array of nodes, the original array is returned.
+When visiting an array of nodes, the returning value of `.visit(nodes)` is the original array (i.e., `nodes`).
