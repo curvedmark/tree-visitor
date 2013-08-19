@@ -2,8 +2,9 @@
   "name": "tree-visitor",
   "version": "0.6.0",
   "description": "Visit nodes in the tree",
-  "main": "Visitor.js",
+  "main": "lib/Visitor.js",
   "directories": {
+    "lib": "lib",
     "test": "test"
   },
   "scripts": {
