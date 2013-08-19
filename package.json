@@ -1,6 +1,6 @@
 {
   "name": "tree-visitor",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Visit nodes in the tree",
   "main": "lib/Visitor.js",
   "directories": {
